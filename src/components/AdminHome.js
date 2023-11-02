@@ -1,25 +1,47 @@
 import React, { useState, useEffect } from 'react';
 
-const AdminHome = ()  => {
+const AdminHome = () => {
+    const [students, setStudents] = useState([]);
 
     useEffect(() => {
-        // called once after intial render
+        // Fetch the list of students when the component mounts
         fetchStudents();
-        }, [] )
-
+    }, []);
 
     const fetchStudents = () => {
-		//TODO complete this method to fetch students and display list of students
-    }
-
+        fetch('/api/students') 
+            .then((response) => response.json())
+            .then((data) => {
+                setStudents(data);
+            })
+            .catch((error) => {
+                console.error('Error fetching students:', error);
+            });
+    };
 
     return (
-        <div> 
-        <div margin="auto" >
-          <h3>Student List</h3>
+        <div>
+            <div style={{ margin: 'auto' }}>
+                <h3>Student List</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {students.map((student) => (
+                            <tr key={student.id}>
+                                <td>{student.id}</td>
+                                <td>{student.name}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
-    )
+    );
 }
 
 export default AdminHome;
